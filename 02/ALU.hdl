@@ -56,10 +56,11 @@ CHIP ALU {
    Mux16(a=bitand, b=addition, sel=f, out=fout);
 
    Not16(in=fout, out=notfout);
-   Mux16(a=fout, b=notfout, sel=no, out=out);
+   Mux16(a=fout, b=notfout, sel=no, out=out, out[15]=ng, out[0..7]=o1, out[8..15]=o2);
 
-   // if (out == 0) set zr = 1
-   
-   // if (out < 0) set ng = 1
-
+   // set zr
+   Or8Way(in=o1, out=or8way1);
+   Or8Way(in=o2, out=or8way2);
+   Or(a=or8way1, b=or8way2, out=allzero);
+   Not(in=allzero, out=zr);
 }
